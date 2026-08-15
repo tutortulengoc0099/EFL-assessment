@@ -1,0 +1,1050 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.1">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;IELTS Reading Simulator&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>:root {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--primary: #2563eb;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--danger: #ef4444;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--warning: #f59e0b;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--success: #10b981;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--bg-pass: #f8fafc;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--bg-ques: #ffffff;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--border: #e2e8f0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--text: #1e293b;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--highlight-yellow: #fef08a;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--highlight-pink: #fbcfe8;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>/* Dynamic Font Sizes */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--fs-passage: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>--fs-question: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>* { box-sizing: border-box; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', system-ui, sans-serif; color: var(--text); overflow: hidden; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* --- Layout --- */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.app-container { display: flex; flex-direction: column; height: 100vh; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Top Bar */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.top-bar {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 50px; background: #fff; border-bottom: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex; align-items: center; justify-content: space-between; padding: 0 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-shrink: 0; z-index: 100;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.bar-group { display: flex; gap: 10px; align-items: center; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.timer-display { font-family: monospace; font-size: 1.2rem; font-weight: bold; color: var(--primary); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 6px 12px; border: 1px solid var(--border); background: #fff; cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px; font-size: 0.9rem; transition: all 0.2s;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn:hover { background: #f1f5f9; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-primary { background: var(--primary); color: white; border-color: var(--primary); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-primary:hover { background: #1d4ed8; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-danger { background: var(--danger); color: white; border-color: var(--danger); }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Main Workspace */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.workspace { display: flex; flex: 1; overflow: hidden; position: relative; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.pane { overflow-y: auto; height: 100%; position: relative; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.pane-passage { background: var(--bg-pass); width: 50%; border-right: 1px solid var(--border); padding: 20px; font-size: var(--fs-passage); line-height: 1.6; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.pane-questions { background: var(--bg-ques); width: 50%; padding: 20px; font-size: var(--fs-question); position: relative; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Splitter */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.splitter { width: 8px; background: #cbd5e1; cursor: col-resize; flex-shrink: 0; transition: background 0.2s; z-index: 10; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.splitter:hover, .splitter.active { background: var(--primary); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Mobile Tabs */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.mobile-tabs { display: none; height: 50px; border-top: 1px solid var(--border); background: #fff; flex-shrink: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab-btn { flex: 1; border: none; background: transparent; font-weight: 600; color: #64748b; cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tab-btn.active { color: var(--primary); border-top: 2px solid var(--primary); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* --- Components --- */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Passage Lines */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.line-wrapper { display: flex; margin-bottom: 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.line-num { width: 30px; color: #94a3b8; font-size: 0.75em; user-select: none; text-align: right; padding-right: 8px; flex-shrink: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.line-text { flex: 1; white-space: pre-wrap; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Highlights */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>mark.hl-yellow { background-color: var(--highlight-yellow); cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>mark.hl-pink { background-color: var(--highlight-pink); cursor: pointer; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Questions */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.question-block { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed var(--border); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.q-header { display: flex; gap: 8px; align-items: baseline; margin-bottom: 8px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.q-id { font-weight: bold; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.q-id.answered { background: var(--primary); color: white; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.q-id.flagged { border: 2px solid var(--warning); }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Drag Drop Matching */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.dd-container { border: 1px solid var(--border); padding: 10px; margin: 10px 0; background: #fff; border-radius: 4px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.dd-segment { margin-bottom: 15px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.dd-zone {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>min-height: 40px; border: 2px dashed #cbd5e1; margin-top: 5px; background: #f8fafc;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex; align-items: center; padding: 5px; border-radius: 4px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.dd-zone.drag-over { border-color: var(--primary); background: #eff6ff; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.draggable-token {<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #fff; border: 1px solid var(--primary); color: var(--primary);<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 4px 8px; border-radius: 4px; cursor: grab; margin-right: 5px; font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.pool-area { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: #f1f5f9; min-height: 50px; border-radius: 4px;}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Question Types */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.mcq-option { display: block; margin: 5px 0; cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.input-blank { border: 1px solid #94a3b8; padding: 4px; border-radius: 4px; max-width: 200px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tfng-group { display: flex; gap: 10px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tfng-btn { padding: 4px 10px; border: 1px solid var(--border); cursor: pointer; border-radius: 15px; font-size: 0.85em; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.tfng-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Modals */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.modal { background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.modal.active { display: flex; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Context Menu (Highlight) */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.context-menu { position: fixed; background: #334155; padding: 5px; border-radius: 4px; display: none; gap: 5px; z-index: 200; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.color-dot { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid white; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Utils */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.hidden { display: none !important; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.text-red { color: var(--danger); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.text-green { color: var(--success); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Result View */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.diff { display: flex; gap: 10px; font-size: 0.9em; margin-top: 4px; color: #64748b; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (max-width: 768px) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.splitter { display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.workspace { flex-direction: column; }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.pane { width: 100%; display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.pane.active { display: block; }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.mobile-tabs { display: flex; }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.top-bar .bar-group span { display: none; } /* Hide labels on mobile */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="app-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Top Bar --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="top-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="bar-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn btn-primary" onclick="app.ui.openImportModal()"&gt;Import CSV&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="timer" class="timer-display"&gt;00:00&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="bar-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn" onclick="app.logic.toggleTimer()" id="btnPause"&gt;Pause&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;select class="btn" id="fontResizer" onchange="app.ui.resizeFont(this.value)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="S"&gt;A-&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="M" selected&gt;A&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;option value="L"&gt;A+&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn btn-danger" onclick="app.logic.submitTest()"&gt;Submit&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Workspace --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="workspace" id="workspace"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="pane pane-passage" id="panePassage"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Passage Content --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="passageContainer"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="splitter" id="splitter"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="pane pane-questions" id="paneQuestions"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Questions Content --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="questionsContainer"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Mobile Tabs --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="mobile-tabs"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="tab-btn active" onclick="app.ui.switchMobileTab('passage')"&gt;Passage&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="tab-btn" onclick="app.ui.switchMobileTab('questions')"&gt;Questions&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="tab-btn" onclick="app.ui.toggleNotes()"&gt;Notes&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Context Menu for Highlight --&gt;</p>
+<p class="p1">&lt;div id="ctxMenu" class="context-menu"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="color-dot" style="background: var(--highlight-yellow);" onclick="app.ui.applyHighlight('hl-yellow')"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="color-dot" style="background: var(--highlight-pink);" onclick="app.ui.applyHighlight('hl-pink')"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="color-dot" style="background: white; color: red; text-align: center; line-height: 16px; font-weight: bold;" onclick="app.ui.removeHighlight()"&gt;✕&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Import Modal --&gt;</p>
+<p class="p1">&lt;div class="modal-overlay" id="importModal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="modal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Import Test (CSV)&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Select multiple CSV files (meta, passage_lines, questions, etc.)&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="file" id="csvInput" multiple accept=".csv" class="btn" style="width: 100%; margin-bottom: 10px;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="importLog" style="background: #f1f5f9; padding: 10px; font-family: monospace; font-size: 0.8em; max-height: 200px; overflow: auto;"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top: 10px; text-align: right;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn" onclick="app.ui.closeModal('importModal')"&gt;Cancel&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn btn-primary" onclick="app.parser.processFiles()"&gt;Process&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;hr&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Data Management&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn" onclick="app.state.resetAttempt()"&gt;Clear Current Attempt&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn" onclick="app.state.exportAttempt()"&gt;Export Attempt JSON&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label class="btn" style="display:inline-block"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Import Attempt JSON &lt;input type="file" onchange="app.state.importAttempt(this)" style="display:none" accept=".json"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top:10px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">             </span>&lt;button class="btn" onclick="app.parser.loadDemo()"&gt;Load DEMO Data&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Result Modal --&gt;</p>
+<p class="p1">&lt;div class="modal-overlay" id="resultModal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="modal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Test Results&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="scoreHeader" style="font-size: 1.5em; text-align: center; margin: 20px 0; font-weight: bold;"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="resultDetails"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top: 20px; text-align: right;"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn" onclick="app.ui.closeModal('resultModal')"&gt;Close &amp; Review&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Tab Warning Modal --&gt;</p>
+<p class="p1">&lt;div class="modal-overlay" id="tabWarningModal"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="modal" style="border: 2px solid var(--danger);"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 class="text-red"&gt;⚠️ Tab Switch Detected&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Please stay in this tab to complete the test.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Switches detected: &lt;span id="switchCount"&gt;0&lt;/span&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn btn-primary" onclick="app.ui.closeModal('tabWarningModal')"&gt;I Understand&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">/**</p>
+<p class="p1"><span class="Apple-converted-space"> </span>* IELTS Reading App Core Logic</p>
+<p class="p1"><span class="Apple-converted-space"> </span>* Author: Aiden (Prompted)</p>
+<p class="p1"><span class="Apple-converted-space"> </span>*/</p>
+<p class="p2"><br></p>
+<p class="p1">class AppState {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>constructor() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.testData = null; // meta, passage, questions, etc.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.attempt = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>testId: null,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>answers: {}, // questionId -&gt; value</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flags: [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>timer: 0,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>status: 'idle', // idle, running, paused, finished</p>
+<p class="p1"><span class="Apple-converted-space">            </span>tabSwitches: 0,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>switchLog: [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>highlights: [], // {line, start, end, class}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>changeLog: [] // {ts, qId, val}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.prefs = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>splitRatio: 50,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>fontSize: 'M'</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>loadFromStorage(testId) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const key = `ielts_attempt_${testId}`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const saved = localStorage.getItem(key);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (saved) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.attempt = JSON.parse(saved);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.attempt.testId = testId;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Load prefs</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const prefs = localStorage.getItem('ielts_prefs');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (prefs) this.prefs = JSON.parse(prefs);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>saveToStorage() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!this.attempt.testId) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem(`ielts_attempt_${this.attempt.testId}`, JSON.stringify(this.attempt));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem('ielts_prefs', JSON.stringify(this.prefs));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>logChange(qId, val) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.attempt.changeLog.push({</p>
+<p class="p1"><span class="Apple-converted-space">            </span>ts: Date.now(),</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qId: qId,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>val: val</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>exportAttempt() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.attempt));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const downloadAnchorNode = document.createElement('a');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>downloadAnchorNode.setAttribute("href", dataStr);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>downloadAnchorNode.setAttribute("download", `attempt_${this.attempt.testId}_${Date.now()}.json`);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.body.appendChild(downloadAnchorNode);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>downloadAnchorNode.click();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>downloadAnchorNode.remove();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>importAttempt(input) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const file = input.files[0];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!file) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const reader = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>reader.onload = (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const data = JSON.parse(e.target.result);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if(data.testId !== this.testData.meta.testId) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>alert("Test ID mismatch!");<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.attempt = data;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>window.location.reload();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch(err) { alert("Invalid JSON"); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>reader.readAsText(file);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>resetAttempt() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(confirm("Are you sure? This will delete all progress.")) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>localStorage.removeItem(`ielts_attempt_${this.attempt.testId}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>window.location.reload();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">class CSVParser {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>constructor(app) { this.app = app; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>parseCSV(text) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Simple robust parser handling quoted fields</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const rows = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentRow = [];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentField = '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let insideQuotes = false;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; text.length; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const char = text[i];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const nextChar = text[i+1];</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (char === '"') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (insideQuotes &amp;&amp; nextChar === '"') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>currentField += '"'; i++; // Skip escaped quote</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>insideQuotes = !insideQuotes;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if (char === ',' &amp;&amp; !insideQuotes) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentRow.push(currentField.trim()); currentField = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if ((char === '\r' || char === '\n') &amp;&amp; !insideQuotes) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (currentField || currentRow.length &gt; 0) currentRow.push(currentField.trim());</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (currentRow.length &gt; 0) rows.push(currentRow);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentRow = []; currentField = '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (char === '\r' &amp;&amp; nextChar === '\n') i++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>currentField += char;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (currentField || currentRow.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentRow.push(currentField.trim());</p>
+<p class="p1"><span class="Apple-converted-space">            </span>rows.push(currentRow);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return rows;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>rowToObject(headers, row) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const obj = {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>headers.forEach((h, i) =&gt; obj[h] = row[i] || '');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return obj;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>async processFiles() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const input = document.getElementById('csvInput');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const files = Array.from(input.files);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const log = document.getElementById('importLog');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>log.innerHTML = '';</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const rawData = {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const requiredFiles = ['meta', 'passage_lines', 'questions'];</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const readProms = files.map(f =&gt; new Promise(resolve =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const reader = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>reader.onload = (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Guess type by filename</p>
+<p class="p1"><span class="Apple-converted-space">                </span>let type = null;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const name = f.name.toLowerCase();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (name.includes('meta')) type = 'meta';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('passage')) type = 'passage_lines';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('questions')) type = 'questions';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('segment')) type = 'segments';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('pool')) type = 'pool';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('targets')) type = 'targets';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>else if (name.includes('statement')) type = 'statements';</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>if(type) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const rows = this.parseCSV(e.target.result);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const headers = rows[0]; // Assume first row is header</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>rawData[type] = rows.slice(1).map(r =&gt; this.rowToObject(headers, r));</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>log.innerHTML += `&lt;div class="text-green"&gt;Loaded ${type} (${rawData[type].length} rows)&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>resolve();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>};</p>
+<p class="p1"><span class="Apple-converted-space">            </span>reader.readAsText(f);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>await Promise.all(readProms);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Validation</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const missing = requiredFiles.filter(k =&gt; !rawData[k]);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (missing.length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>log.innerHTML += `&lt;div class="text-red"&gt;Missing files: ${missing.join(', ')}&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.compileTest(rawData);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>compileTest(raw) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Transform raw CSV data into App Object Model</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const test = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>meta: raw.meta[0], // First row of meta</p>
+<p class="p1"><span class="Apple-converted-space">            </span>passage: raw.passage_lines.map(l =&gt; ({ line: parseInt(l.lineNo), text: l.text })),</p>
+<p class="p1"><span class="Apple-converted-space">            </span>questions: [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>segments: raw.segments || [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>headingsPool: raw.pool || [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>targets: raw.targets || [],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>statements: raw.statements || []</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Enrich questions</p>
+<p class="p1"><span class="Apple-converted-space">        </span>test.questions = raw.questions.map(q =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>q.order = parseInt(q.order) || 999;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Attach relational data</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (q.type === 'matching_headings') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const target = test.targets.find(t =&gt; t.questionId === q.questionId);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (target) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>q.targetSegment = target.segmentId;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>q.correctHeading = target.correctHeadingKey;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>q.poolId = target.poolId;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if (q.type === 'tfng' || q.type === 'ynng') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const stmt = test.statements.find(s =&gt; s.questionId === q.questionId);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (stmt) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>q.prompt = stmt.statementText;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>q.correctLabel = stmt.correctLabel;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return q;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}).sort((a,b) =&gt; a.order - b.order);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>console.log("Compiled Test:", test);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.testData = test;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.attempt.testId = test.meta.testId;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.ui.init();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.ui.closeModal('importModal');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>loadDemo() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Hardcoded demo data for quick testing</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const demoRaw = {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>meta: [{ testId: 'DEMO_01', durationMinutes: '60', timerMode: 'countdown', warnOnTabSwitch: 'true' }],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>passage_lines: Array.from({length: 40}, (_, i) =&gt; ({ lineNo: i+1, text: `This is line number ${i+1} of the reading passage. It contains information related to the questions on the right. Usually, IELTS passages are academic and dense.` })),</p>
+<p class="p1"><span class="Apple-converted-space">            </span>questions: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q1', type: 'matching_headings', prompt: 'Paragraph A', order: 1 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q2', type: 'matching_headings', prompt: 'Paragraph B', order: 2 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q3', type: 'mcq_single', prompt: 'What is the main topic?', optionA: 'Science', optionB: 'History', optionC: 'Art', correctOptionKey: 'A', order: 3 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q4', type: 'fill_blank', prompt: 'The passage mentions a word limit of ___ words.', correctAnswers: '250|two hundred fifty', order: 4 },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q5', type: 'tfng', prompt: 'The author agrees with the theory.', correctLabel: 'T', order: 5 }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>segments: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ segmentId: 'A', startLine: '1', endLine: '5' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ segmentId: 'B', startLine: '6', endLine: '10' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pool: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ poolId: '1', headingKey: 'i', headingText: 'Introduction to History' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ poolId: '1', headingKey: 'ii', headingText: 'Scientific Breakdown' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ poolId: '1', headingKey: 'iii', headingText: 'Future Implications' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>targets: [</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q1', poolId: '1', segmentId: 'A', correctHeadingKey: 'i' },</p>
+<p class="p1"><span class="Apple-converted-space">                </span>{ questionId: 'Q2', poolId: '1', segmentId: 'B', correctHeadingKey: 'ii' }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>],</p>
+<p class="p1"><span class="Apple-converted-space">            </span>statements: []</p>
+<p class="p1"><span class="Apple-converted-space">        </span>};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.compileTest(demoRaw);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">class Renderer {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>constructor(app) { this.app = app; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderPassage() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const container = document.getElementById('passageContainer');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const lines = this.app.state.testData.passage;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let html = '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>lines.forEach(l =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>html += `&lt;div class="line-wrapper" id="line-${l.line}" data-line="${l.line}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="line-num"&gt;${l.line}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="line-text"&gt;${this.sanitize(l.text)}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>container.innerHTML = html;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.ui.restoreHighlights();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderQuestions() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const container = document.getElementById('questionsContainer');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const questions = this.app.state.testData.questions;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let html = '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Group logic could go here, treating flat list for now</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Find matching pools to render drag source</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const pools = [...new Set(questions.filter(q =&gt; q.type === 'matching_headings').map(q =&gt; q.poolId))];</p>
+<p class="p1"><span class="Apple-converted-space">        </span>pools.forEach(pid =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>html += this.renderHeadingPool(pid);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>questions.forEach(q =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>html += `&lt;div class="question-block" id="qblock-${q.questionId}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="q-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="q-id" onclick="app.ui.scrollToQuestion('${q.questionId}')"&gt;${q.questionId}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span&gt;${this.sanitize(q.prompt)}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="q-body"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${this.renderQuestionInput(q)}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>container.innerHTML = html;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Restore answers</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const answers = this.app.state.attempt.answers;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Object.keys(answers).forEach(qid =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const val = answers[qid];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Generic restore logic</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const input = document.querySelector(`[name="ans-${qid}"]`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (input) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (input.type === 'radio') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const radio = document.querySelector(`[name="ans-${qid}"][value="${val}"]`);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if (radio) radio.checked = true;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>input.value = val;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// TFNG restore</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const btn = document.querySelector(`.tfng-btn[data-qid="${qid}"][data-val="${val}"]`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if(btn) btn.classList.add('selected');</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Mark question as answered visually</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.querySelector(`#qblock-${qid} .q-id`).classList.add('answered');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Restore Drag Drop</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.logic.restoreDragDrop();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderHeadingPool(poolId) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const pool = this.app.state.testData.headingsPool.filter(p =&gt; p.poolId === poolId);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (pool.length === 0) return '';</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let tokens = pool.map(h =&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>`&lt;div class="draggable-token" draggable="true" data-key="${h.headingKey}" data-pool="${poolId}" id="token-${h.headingKey}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;b&gt;${h.headingKey}&lt;/b&gt; ${h.headingText}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">        </span>).join('');</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>return `&lt;div class="dd-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h4&gt;List of Headings&lt;/h4&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="pool-area" id="pool-${poolId}" ondrop="app.logic.drop(event)" ondragover="app.logic.allowDrop(event)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>${tokens}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderQuestionInput(q) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (q.type === 'mcq_single') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const opts = ['optionA','optionB','optionC','optionD'].map(k =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if(!q[k]) return '';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const key = k.replace('option','');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>return `&lt;label class="mcq-option"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;input type="radio" name="ans-${q.questionId}" value="${key}" onchange="app.logic.saveAnswer('${q.questionId}', this.value)"&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;b&gt;${key}.&lt;/b&gt; ${q[k]}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/label&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}).join('');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return opts;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>else if (q.type === 'fill_blank') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return `&lt;input type="text" class="input-blank" name="ans-${q.questionId}" onchange="app.logic.saveAnswer('${q.questionId}', this.value)"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else if (q.type === 'tfng' || q.type === 'ynng') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const labels = q.type === 'tfng' ? ['TRUE','FALSE','NOT GIVEN'] : ['YES','NO','NOT GIVEN'];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const vals = q.type === 'tfng' ? ['T','F','NG'] : ['Y','N','NG'];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return `&lt;div class="tfng-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>${vals.map((v, i) =&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>`&lt;div class="tfng-btn" data-qid="${q.questionId}" data-val="${v}" onclick="app.logic.selectTFNG(this)"&gt;${labels[i]}&lt;/div&gt;`</p>
+<p class="p1"><span class="Apple-converted-space">                </span>).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else if (q.type === 'matching_headings') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>return `&lt;div class="dd-zone" data-qid="${q.questionId}" ondrop="app.logic.drop(event)" ondragover="app.logic.allowDrop(event)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;span style="color:#ccc; font-size:0.8em; margin-right: auto;"&gt;Drop heading here&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;!-- Fallback Select --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;select onchange="app.logic.saveAnswer('${q.questionId}', this.value)" onclick="event.stopPropagation()"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;option value=""&gt;(Select)&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>${this.app.state.testData.headingsPool.filter(h =&gt; h.poolId === q.poolId).map(h =&gt; `&lt;option value="${h.headingKey}"&gt;${h.headingKey}&lt;/option&gt;`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return '(Unknown type)';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>sanitize(str) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!str) return '';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Very basic sanitization allowing only safe tags</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return str.replace(/&lt;/g, "&amp;lt;").replace(/&gt;/g, "&amp;gt;")</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.replace(/&amp;lt;(b|i|u|sup|sub|br)&amp;gt;/g, "&lt;$1&gt;")</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.replace(/&amp;lt;\/(b|i|u|sup|sub)&amp;gt;/g, "&lt;/$1&gt;");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">class Logic {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>constructor(app) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app = app;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.timerInterval = null;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>startTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (this.app.state.attempt.status === 'finished') return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.attempt.status = 'running';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const isCountdown = this.app.state.testData.meta.timerMode === 'countdown';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const duration = parseInt(this.app.state.testData.meta.durationMinutes) * 60;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (this.app.state.attempt.timer === 0 &amp;&amp; isCountdown) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.app.state.attempt.timer = duration;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.timerInterval = setInterval(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (this.app.state.attempt.status !== 'running') return;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (isCountdown) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.attempt.timer--;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (this.app.state.attempt.timer &lt;= 0) this.submitTest();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.attempt.timer++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.app.ui.updateTimerDisplay();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (this.app.state.attempt.timer % 10 === 0) this.app.state.saveToStorage(); // Autosave every 10s</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}, 1000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>toggleTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const status = this.app.state.attempt.status;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const btn = document.getElementById('btnPause');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (status === 'running') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.app.state.attempt.status = 'paused';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>btn.innerText = "Resume";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.body.classList.add('blurred'); // Could add CSS blur filter</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else if (status === 'paused' || status === 'idle') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.startTimer();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>btn.innerText = "Pause";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>saveAnswer(qId, value) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (this.app.state.attempt.status === 'finished') return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.attempt.answers[qId] = value;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.logChange(qId, value);</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// UI Feedback</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelector(`#qblock-${qId} .q-id`).classList.add('answered');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>selectTFNG(el) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (this.app.state.attempt.status === 'finished') return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const qId = el.dataset.qid;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const val = el.dataset.val;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Toggle visual</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const group = el.parentElement;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>group.querySelectorAll('.tfng-btn').forEach(b =&gt; b.classList.remove('selected'));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>el.classList.add('selected');</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.saveAnswer(qId, val);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- Drag &amp; Drop ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>allowDrop(ev) { ev.preventDefault(); }</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Add event listeners to tokens when rendered</p>
+<p class="p1"><span class="Apple-converted-space">    </span>initDragEvents() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelectorAll('.draggable-token').forEach(t =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>t.addEventListener('dragstart', (ev) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>ev.dataTransfer.setData("text/plain", JSON.stringify({</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>key: t.dataset.key,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">                    </span>pool: t.dataset.pool,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>id: t.id</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>drop(ev) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ev.preventDefault();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const dataStr = ev.dataTransfer.getData("text");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!dataStr) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const data = JSON.parse(dataStr);</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Determine target</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let target = ev.target;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>while (!target.classList.contains('dd-zone') &amp;&amp; !target.classList.contains('pool-area')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>target = target.parentElement;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if(!target) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tokenEl = document.getElementById(data.id);</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (target.classList.contains('dd-zone')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Drop into question</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// If zone already has a token, move it back to pool</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const existing = target.querySelector('.draggable-token');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (existing) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const pool = document.getElementById(`pool-${existing.dataset.pool}`);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>pool.appendChild(existing);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>target.appendChild(tokenEl);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const qId = target.dataset.qid;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>this.saveAnswer(qId, data.key);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else if (target.classList.contains('pool-area')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Return to pool</p>
+<p class="p1"><span class="Apple-converted-space">            </span>target.appendChild(tokenEl);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Need to find which question held this token to clear answer</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// This is tricky, simpler to re-scan or just rely on user interaction</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// For now, if dragged to pool, we don't know easily which Q it came from without tracking</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Hack: search all answers for this value and clear? No, value might duplicate.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Correct way: When dropped in zone, we update. When removed from zone, we update.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>restoreDragDrop() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.initDragEvents();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const answers = this.app.state.attempt.answers;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>Object.keys(answers).forEach(qid =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const val = answers[qid];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const zone = document.querySelector(`.dd-zone[data-qid="${qid}"]`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (zone) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Find token in pool</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const token = document.querySelector(`.draggable-token[data-key="${val}"]`);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (token) zone.appendChild(token);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- Scoring ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>submitTest() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.attempt.status = 'finished';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>clearInterval(this.timerInterval);</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let correctCount = 0;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let total = 0;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let detailsHtml = '&lt;div style="max-height: 400px; overflow: auto;"&gt;';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.testData.questions.forEach(q =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>total++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const userAns = (this.app.state.attempt.answers[q.questionId] || '').trim();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let isCorrect = false;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let correctStr = '';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (['mcq_single', 'matching_headings', 'tfng', 'ynng'].includes(q.type)) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Key comparison</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const key = q.correctOptionKey || q.correctHeading || q.correctLabel;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>isCorrect = userAns === key;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>correctStr = key;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else if (q.type === 'fill_blank') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const keys = q.correctAnswers.split('|').map(k =&gt; k.trim());</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (q.caseSensitive === 'false' || !q.caseSensitive) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>isCorrect = keys.some(k =&gt; k.toLowerCase() === userAns.toLowerCase());</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>isCorrect = keys.includes(userAns);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>correctStr = keys.join(' OR ');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (isCorrect) correctCount++;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>detailsHtml += `&lt;div class="result-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;b&gt;${q.questionId}&lt;/b&gt; (${q.type}) &lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;span class="${isCorrect ? 'text-green' : 'text-red'}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>Your: ${userAns || '(empty)'}</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="text-right"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>Expected: &lt;b&gt;${correctStr}&lt;/b&gt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>detailsHtml += '&lt;/div&gt;';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const score = document.getElementById('scoreHeader');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>score.innerHTML = `Score: ${correctCount} / ${total} (${Math.round(correctCount/total*100)}%)`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('resultDetails').innerHTML = detailsHtml;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.ui.openModal('resultModal');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">class UI {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>constructor(app) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app = app;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.setupResizer();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.setupSelection();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.setupTabVisibility();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>init() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!this.app.state.testData) {</p>
+<p class="p1"><span class="Apple-converted-space">             </span>this.openImportModal();</p>
+<p class="p1"><span class="Apple-converted-space">             </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.renderer.renderPassage();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.renderer.renderQuestions();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.logic.startTimer();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.resizeFont(this.app.state.prefs.fontSize);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.loadFromStorage(this.app.state.testData.meta.testId);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>openImportModal() { document.getElementById('importModal').classList.add('active'); }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>openModal(id) { document.getElementById(id).classList.add('active'); }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>closeModal(id) { document.getElementById(id).classList.remove('active'); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>updateTimerDisplay() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const sec = this.app.state.attempt.timer;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const m = Math.floor(sec / 60).toString().padStart(2, '0');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const s = (sec % 60).toString().padStart(2, '0');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('timer').innerText = `${m}:${s}`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>resizeFont(size) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>this.app.state.prefs.fontSize = size;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const root = document.documentElement;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(size === 'S') { root.style.setProperty('--fs-passage', '14px'); root.style.setProperty('--fs-question', '14px'); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(size === 'M') { root.style.setProperty('--fs-passage', '16px'); root.style.setProperty('--fs-question', '16px'); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(size === 'L') { root.style.setProperty('--fs-passage', '20px'); root.style.setProperty('--fs-question', '20px'); }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>setupResizer() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const splitter = document.getElementById('splitter');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const left = document.getElementById('panePassage');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const right = document.getElementById('paneQuestions');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let isDragging = false;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>splitter.addEventListener('mousedown', () =&gt; { isDragging = true; splitter.classList.add('active'); });</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('mouseup', () =&gt; { isDragging = false; splitter.classList.remove('active'); });</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener('mousemove', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!isDragging) return;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const percentage = (e.clientX / window.innerWidth) * 100;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (percentage &gt; 20 &amp;&amp; percentage &lt; 80) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>left.style.width = `${percentage}%`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>right.style.width = `${100 - percentage}%`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>switchMobileTab(tab) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelectorAll('.tab-btn').forEach(b =&gt; b.classList.remove('active'));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.querySelectorAll('.pane').forEach(p =&gt; p.classList.remove('active')); // CSS needs helper class</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Manual override for simpler mobile toggle via classes</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (tab === 'passage') {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('panePassage').style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('paneQuestions').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('panePassage').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('paneQuestions').style.display = 'block';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>event.target.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>toggleNotes() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert("Notes feature placeholder"); // Full implementation requires complex overlay</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>scrollToQuestion(qid) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const el = document.getElementById(`qblock-${qid}`);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>el.scrollIntoView({behavior: "smooth"});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (window.innerWidth &lt; 768) this.switchMobileTab('questions');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// --- Highlight System (Simplified Line-based) ---</p>
+<p class="p1"><span class="Apple-converted-space">    </span>setupSelection() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const container = document.getElementById('passageContainer');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const menu = document.getElementById('ctxMenu');</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>container.addEventListener('mouseup', (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const sel = window.getSelection();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (sel.toString().length &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Show Menu</p>
+<p class="p1"><span class="Apple-converted-space">                </span>menu.style.display = 'flex';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>menu.style.left = e.pageX + 'px';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>menu.style.top = e.pageY + 'px';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>menu.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>applyHighlight(className) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const sel = window.getSelection();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!sel.rangeCount) return;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>const range = sel.getRangeAt(0);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const span = document.createElement('mark');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>span.className = className;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Extremely basic persistence logic:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// We find which line-wrapper this selection belongs to</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let node = range.startContainer;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>while(node &amp;&amp; !node.classList?.contains('line-wrapper')) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>node = node.parentElement;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (node) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const lineId = node.dataset.line;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Native highlight</p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>range.surroundContents(span);</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Save to state</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.attempt.highlights.push({</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>line: lineId,</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>html: node.querySelector('.line-text').innerHTML // Saving full HTML of line is safer than offsets in this simple mode</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.saveToStorage();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch(e) { console.log("Cant cross tags"); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.getSelection().removeAllRanges();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('ctxMenu').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>restoreHighlights() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const saved = this.app.state.attempt.highlights;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>saved.forEach(h =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const line = document.getElementById(`line-${h.line}`);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (line) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>line.querySelector('.line-text').innerHTML = h.html;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>removeHighlight() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Advanced: Unwrapping. Simplification: Reload line text</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('ctxMenu').style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>setupTabVisibility() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.addEventListener("visibilitychange", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (document.hidden &amp;&amp; this.app.state.testData?.meta?.warnOnTabSwitch === 'true') {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.attempt.tabSwitches++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.attempt.switchLog.push(Date.now());</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.app.state.saveToStorage();</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById('switchCount').innerText = this.app.state.attempt.tabSwitches;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>this.openModal('tabWarningModal');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// Main Bootstrapper</p>
+<p class="p1">const app = {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>state: new AppState(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ui: null, // Init later</p>
+<p class="p1"><span class="Apple-converted-space">    </span>logic: null,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>parser: null,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderer: null</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">app.ui = new UI(app);</p>
+<p class="p1">app.logic = new Logic(app);</p>
+<p class="p1">app.parser = new CSVParser(app);</p>
+<p class="p1">app.renderer = new Renderer(app);</p>
+<p class="p2"><br></p>
+<p class="p1">// Check for saved session</p>
+<p class="p1">window.onload = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// If we have saved data, maybe auto-load?<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// For now, wait for user to click Import or Load Demo</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">### 2. Hướng dẫn sử dụng &amp; Mẫu CSV</p>
+<p class="p2"><br></p>
+<p class="p1">Để giáo viên tạo đề mới, họ cần tạo tối thiểu 3 file CSV. Dưới đây là nội dung mẫu để bạn copy vào Excel rồi Save As CSV.</p>
+<p class="p2"><br></p>
+<p class="p1">**File 1: meta.csv**</p>
+<p class="p1">```csv</p>
+<p class="p1">testId,title,durationMinutes,timerMode,warnOnTabSwitch,passageLineMode</p>
+<p class="p1">TEST_01,IELTS Simulation Test 1,60,countdown,true,manual</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">**File 2: passage_lines.csv**</p>
+<p class="p1">(Cắt bài đọc thành từng dòng để dễ render và highlight)</p>
+<p class="p1">```csv</p>
+<p class="p1">lineNo,text</p>
+<p class="p1">1,The history of the tortoise is a fascinating subject for biologists.</p>
+<p class="p1">2,These ancient reptiles have existed for millions of years.</p>
+<p class="p1">3,However, their habitats are currently under threat due to human activity.</p>
+<p class="p1">4,Segments A starts here strictly for matching.</p>
+<p class="p1">5,More text about tortoises.</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">**File 3: questions.csv**</p>
+<p class="p1">```csv</p>
+<p class="p1">questionId,type,prompt,optionA,optionB,optionC,optionD,correctOptionKey,correctAnswers,correctLabel,poolId,order</p>
+<p class="p1">Q1,mcq_single,What is the main threat?,Predators,Climate,Humans,Disease,C,,,1</p>
+<p class="p1">Q2,fill_blank,Tortoises have existed for ___ years.,,,,,millions|millions of,,,2</p>
+<p class="p1">Q3,tfng,Tortoises are new species.,,,,,F,,,3</p>
+<p class="p1">Q4,matching_headings,Paragraph A,,,,,,,1,4</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">**File 4: matching_targets.csv** (Nếu có câu hỏi Matching Headings)</p>
+<p class="p1">```csv</p>
+<p class="p1">questionId,poolId,segmentId,correctHeadingKey</p>
+<p class="p1">Q4,1,A,ii</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">**File 5: matching_headings_pool.csv**</p>
+<p class="p1">```csv</p>
+<p class="p1">poolId,headingKey,headingText</p>
+<p class="p1">1,i,The danger of extinction</p>
+<p class="p1">1,ii,An ancient history</p>
+<p class="p1">1,iii,Future predictions</p>
+<p class="p1">```</p>
+<p class="p2"><br></p>
+<p class="p1">**File 6: segments.csv** (Định nghĩa đoạn văn cho matching)</p>
+<p class="p1">```csv</p>
+<p class="p1">segmentId,startLine,endLine</p>
+<p class="p1">A,1,5</p>
+</body>
+</html>
